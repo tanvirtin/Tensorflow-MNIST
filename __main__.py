@@ -1,4 +1,4 @@
-logitsimport tensorflow as tf
+import tensorflow as tf
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 from tqdm import trange
@@ -37,6 +37,35 @@ if __name__ == "__main__":
     # the cost or loss of the neural network is calculated, this loss is reduced by various optimizers
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = Y))
 
+    '''
+        tf.argmax(input, axis=None, name=None, dimension=None)
+        Returns the index with the largest value across axis of a tensor.
+
+        input is a Tensor and axis describes which axis of the input Tensor to reduce across. For vectors, use axis = 0.
+
+        For your specific case let's use two arrays and demonstrate this
+
+        pred = np.array([[31, 23,  4, 24, 27, 34],
+                        [18,  3, 25,  0,  6, 35],
+                        [28, 14, 33, 22, 20,  8],
+                        [13, 30, 21, 19,  7,  9],
+                        [16,  1, 26, 32,  2, 29],
+                        [17, 12,  5, 11, 10, 15]])
+
+        y = np.array([[31, 23,  4, 24, 27, 34],
+                        [18,  3, 25,  0,  6, 35],
+                        [28, 14, 33, 22, 20,  8],
+                        [13, 30, 21, 19,  7,  9],
+                        [16,  1, 26, 32,  2, 29],
+                        [17, 12,  5, 11, 10, 15]])
+        Evaluating tf.argmax(pred, 1) gives a tensor whose evaluation will give array([5, 5, 2, 1, 3, 0])
+
+        Evaluating tf.argmax(y, 1) gives a tensor whose evaluation will give array([5, 5, 2, 1, 3, 0])
+
+        tf.equal(x, y, name=None) takes two tensors(x and y) as inputs and returns the truth value of (x == y) element-wise.
+        Following our example, tf.equal(tf.argmax(pred, 1),tf.argmax(y, 1)) returns a tensor whose evaluation will givearray(1,1,1,1,1,1).
+
+    '''
     # this is the accuracy of the neural network used to calculate the accuracy later
     correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(Y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -44,7 +73,6 @@ if __name__ == "__main__":
     # optimizer is used to minimize the loss computed using the cross entropy function
     optimizer = tf.train.AdamOptimizer().minimize(loss)
 
-    prediction_optimizer = tf.argmax(logits_layer_output, 1)
 
     with tf.Session() as sess:
         # initializes all the global variables, since its written in c or c++, all the variables are initialized
